@@ -9,11 +9,11 @@ import (
 
 var httpClient *http.Client
 
-func init() {
-	httpClient = &http.Client{}
-}
-
 func (sl *Slack) request(req *http.Request) ([]byte, error) {
+	if httpClient == nil {
+		initHttpClient(req)
+	}
+
 	res, err := httpClient.Do(req)
 	if err != nil {
 		return nil, err
