@@ -7,14 +7,12 @@ import (
 	"net/url"
 )
 
-var httpClient *http.Client
-
 func (sl *Slack) request(req *http.Request) ([]byte, error) {
-	if httpClient == nil {
-		initHttpClient(req)
+	if sl.HttpClient == nil {
+		sl.HttpClient = &http.Client{}
 	}
 
-	res, err := httpClient.Do(req)
+	res, err := sl.HttpClient.Do(req)
 	if err != nil {
 		return nil, err
 	}

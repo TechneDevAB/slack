@@ -9,7 +9,8 @@ import (
 )
 
 type WebHook struct {
-	hookURL string
+	hookURL    string
+	HttpClient *http.Client
 }
 
 type WebHookPostPayload struct {
@@ -23,15 +24,21 @@ type WebHookPostPayload struct {
 }
 
 func NewWebHook(hookURL string) *WebHook {
-	return &WebHook{hookURL}
+	return &WebHook{
+		hookURL: hookURL,
+	}
 }
 
 func (hk *WebHook) PostMessage(payload *WebHookPostPayload) error {
+	if hk.HttpClient == nil {
+		hk.HttpClient = &http.Client{}
+	}
+
 	body, err := json.Marshal(payload)
 	if err != nil {
 		return err
 	}
-	resp, err := http.Post(hk.hookURL, "application/json", bytes.NewReader(body))
+	resp, err := hk.HttpClient.Post(hk.hookURL, "application/json", bytes.NewReader(body))
 	if err != nil {
 		return err
 	}

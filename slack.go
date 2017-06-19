@@ -1,11 +1,13 @@
 package slack
 
 import (
+	"net/http"
 	"net/url"
 )
 
 type Slack struct {
-	token string
+	token      string
+	HttpClient *http.Client
 }
 
 // Create a slack client with an API token.
